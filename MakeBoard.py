@@ -33,6 +33,3 @@ def makeBoard(rows, cols, mines):
                 board[r+1][c+1] += 1 if board[r+1][c+1] != -1 else 0
 
     return board
-
-
-print(makeBoard(9, 9, 10))
