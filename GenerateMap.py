@@ -18,24 +18,23 @@ def generateBool(width: int, height: int, numBomb: int) -> list[list[bool]]:
 def generateBoard(boolMap: list[list[bool]]) -> list[list[int]]:
     arr = [[0 for row in range(len(boolMap[0]))] for column in range(len(boolMap))]
 
-    position: int = 0
+    for y in range(len(arr[0])):
+        for x in range(len(arr[0])):
+            if boolMap[x][y]:
+                incrementNeighbors(x, y, arr)
 
-    for row in boolMap:
-        for val in row:
-            if val:
-                incrementNeighbors(position, arr)
-            position += 1
-
-
-
+    for y in range(len(arr[0])):
+        for x in range(len(arr)):
+            if boolMap[x][y]:
+                print(f" {x}, {y}")
+                arr[x][y] = -1
+    
     return arr
 
-def incrementNeighbors(position: int, array: list[list[int]]):
+def incrementNeighbors(x: int, y: int, array: list[list[int]]):
     #Only enter here if position has a min
     height: int = len(array)
     width: int = len(array[0])
-    x = position // height
-    y = position % width
 
     if (x == 0):
         #Top
