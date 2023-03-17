@@ -28,11 +28,11 @@ def makeBoard(rows, cols, mines):
         if r < rows - 1:
             board[r+1][c] += 1 if board[r+1][c] != -1 else 0
             if c > 0:
-                board[r+1][c-1] += 1 if board[r-1][c-1] != -1 else 0
+                board[r+1][c-1] += 1 if board[r+1][c-1] != -1 else 0
             if c < cols - 1:
-                board[r+1][c+1] += 1 if board[r-1][c+1] != -1 else 0
+                board[r+1][c+1] += 1 if board[r+1][c+1] != -1 else 0
 
     return board
 
 
-print(makeBoard(5, 5, 3))
+print(makeBoard(9, 9, 10))
