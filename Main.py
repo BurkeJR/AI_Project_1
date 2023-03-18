@@ -44,18 +44,18 @@ def uncover(row, col, gameBoard):
     gameBoard[row][col].uncovered = True
 
     if val == 0:
-        uncover_neighbors(row, col, gameBoard)
+        neighbors = findNeighbors(row, col, gameBoard)
+        uncover_neighbors(gameBoard, neighbors)
 
-def uncover_neighbors(r, c, gameBoard):
+def uncover_neighbors(gameBoard, neighbors):
+
+    for row, col in neighbors:
+        uncover(row, col, gameBoard)
+
+def findNeighbors(r, c, gameBoard):
     rows = len(gameBoard)
     cols = len(gameBoard[0])
 
-    neigbhors = findNeighbors(r, c, rows, cols)
-
-    for row, col in neigbhors:
-        uncover(row, col, gameBoard)
-
-def findNeighbors(r, c, rows, cols):
     neighbors = []
     if r > 0:
         neighbors.append((r - 1,c))
@@ -75,16 +75,17 @@ def findNeighbors(r, c, rows, cols):
             neighbors.append((r + 1, c + 1))
     return neighbors
 
-def flagMine(r, c, gameBoard):
-    rows = len(gameBoard)
-    cols = len(gameBoard[0])
-
-    neighbors = findNeighbors(r,c,rows,cols)
-
+def flagMine(r, c, gameBoard, neighbors):
     for nrow,ncol in neighbors:
         gameBoard[nrow][ncol].neighbor_mines.append(gameBoard[r][c])
         
-
+def evaluateNeighbors(r,c, gameBoard, neighbors):
+    for nrow,ncol in neighbors:
+        square = gameBoard[nrow][ncol]
+        if square.uncovered and square.number == len(square.neighbor_mines):
+            neighborsEval = findNeighbors(nrow, ncol, gameBoard)
+            neighborsEval.remove((r,c))
+            evaluateNeighbors(nrow, ncol, gameBoard, neighbors)
 
     
 
