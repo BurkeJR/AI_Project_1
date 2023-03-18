@@ -37,13 +37,14 @@ def main():
 def mark(row, col, board, gameBoard):
     val = gameBoard[row][col].number
     
-    if board[row][col] != '_':
+    if gameBoard[row][col].uncovered:
         return
 
     if val == -1:
         return True
     
     board[row][col] = val
+    gameBoard[row][col].uncovered = True
 
     if val == 0:
         markNeighbors(row, col, board, gameBoard)
@@ -76,6 +77,18 @@ def findNeighbors(r, c, rows, cols):
         if c < cols - 1:
             neighbors.append((r + 1, c + 1))
     return neighbors
+
+def flagMine(r, c, gameBoard):
+    rows = len(gameBoard)
+    cols = len(gameBoard[0])
+
+    neighbors = findNeighbors(r,c,rows,cols)
+
+    for nrow,ncol in neighbors:
+        gameBoard[nrow][ncol].neighbor_mines.append(gameBoard[r][c])
+        
+
+
     
 
 
