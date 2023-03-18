@@ -21,12 +21,25 @@ def main():
     while True:
         if sum((1 for row in gameBoard for x in row if not x.uncovered)) == mines:
             break
-        row = int(input("Enter guessing row: "))
-        col = int(input("Enter guessing column: "))
-        if uncover(row, col, gameBoard):
-            m.print_board(gameBoard)
-            print("Hit a mine")
+
+        val = input("g for guess, f for flag: ")
+
+
+        row = int(input("Enter row: "))
+        col = int(input("Enter column: "))
+
+        neighbors = findNeighbors(row, col, gameBoard)
+
+        if val == "g":
+            if uncover(row, col, gameBoard):
+                m.print_board(gameBoard)
+                print("Hit a mine")
             return
+        else:
+            gameBoard[row][col].uncovered == True
+            flagMine(row, col, gameBoard, neighbors)
+            evaluateNeighbors(row, col, gameBoard, neighbors)
+        
         m.print_board(gameBoard)
 
     m.print_board(gameBoard)
@@ -85,7 +98,7 @@ def evaluateNeighbors(r,c, gameBoard, neighbors):
         if square.uncovered and square.number == len(square.neighbor_mines):
             neighborsEval = findNeighbors(nrow, ncol, gameBoard)
             neighborsEval.remove((r,c))
-            evaluateNeighbors(nrow, ncol, gameBoard, neighbors)
+            uncover_neighbors(gameBoard, neighbors)
 
     
 

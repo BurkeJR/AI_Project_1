@@ -38,7 +38,7 @@ class Square():
 def makeBoard(rows, cols, mines, startr, startc):
     board = [[Square(r, c, 0) for r in range(rows)] for c in range(cols)]
 
-    startingPointNeighbors = Main.findNeighbors(startr, startc, rows, cols)
+    startingPointNeighbors = Main.findNeighbors(startr, startc, board)
     startingPointNeighbors.append((startr,startc))
 
     for _ in range(0, mines):
@@ -53,7 +53,7 @@ def makeBoard(rows, cols, mines, startr, startc):
 
         board[r][c].number = -1
 
-        neighbors = Main.findNeighbors(r,c, rows, cols)
+        neighbors = Main.findNeighbors(r,c, board)
         for row, col in neighbors:
             board[row][col].number += 1 if board[row][col].number != -1 else 0
 
