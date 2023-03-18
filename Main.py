@@ -100,7 +100,7 @@ def evaluateNeighbors(r,c, gameBoard, neighbors):
         if square.uncovered and square.number == len(square.neighbor_mines):
             neighborsEval = findNeighbors(nrow, ncol, gameBoard)
             neighborsEval.remove((r,c))
-            uncover_neighbors(gameBoard, neighbors)
+            uncover_neighbors(gameBoard, neighborsEval)
 
     
 
