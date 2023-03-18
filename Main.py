@@ -11,30 +11,28 @@ def main():
     startc = cols // 2
 
     gameBoard = m.makeBoard(rows, cols, mines, startr, startc)
+    revealed_board = np.asarray([[(gameBoard[j][i].number if gameBoard[j][i].number != -1 else '*') for i in range(cols)] for j in range(rows)])
 
-    userBoard = np.asarray([["_" for i in range(cols)] for j in range(rows)])
+    uncover(startr, startc, gameBoard)
 
-    mark(startr, startc, userBoard, gameBoard)
-
-    print(userBoard)
+    print(revealed_board)
+    m.print_board(gameBoard)
 
     while True:
-        if sum((1 for row in userBoard for x in row if x == '_')) == mines:
+        if sum((1 for row in gameBoard for x in row if not x.uncovered)) == mines:
             break
         row = int(input("Enter guessing row: "))
         col = int(input("Enter guessing column: "))
-        if mark(row, col, userBoard, gameBoard):
-            userBoard[row][col] = '*'
-            print(userBoard)
+        if uncover(row, col, gameBoard):
+            m.print_board(gameBoard)
             print("Hit a mine")
             return
-        print(userBoard)
+        m.print_board(gameBoard)
 
-
-    print(userBoard)
+    m.print_board(gameBoard)
     print("Congrats!")
 
-def mark(row, col, board, gameBoard):
+def uncover(row, col, gameBoard):
     val = gameBoard[row][col].number
     
     if gameBoard[row][col].uncovered:
@@ -43,20 +41,19 @@ def mark(row, col, board, gameBoard):
     if val == -1:
         return True
     
-    board[row][col] = val
     gameBoard[row][col].uncovered = True
 
     if val == 0:
-        markNeighbors(row, col, board, gameBoard)
+        uncover_neighbors(row, col, gameBoard)
 
-def markNeighbors(r, c, board, gameBoard):
-    rows = len(board)
-    cols = len(board[0])
+def uncover_neighbors(r, c, gameBoard):
+    rows = len(gameBoard)
+    cols = len(gameBoard[0])
 
     neigbhors = findNeighbors(r, c, rows, cols)
 
     for row, col in neigbhors:
-        mark(row, col, board, gameBoard)
+        uncover(row, col, gameBoard)
 
 def findNeighbors(r, c, rows, cols):
     neighbors = []

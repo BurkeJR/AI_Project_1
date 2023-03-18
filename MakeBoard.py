@@ -13,10 +13,16 @@ class Square():
     def safe_to_uncover_neighbors(self):
         return self.number == len(self.neighbor_mines)
     
-    def __str__(self):
+    def __str__(self, reveal=False):
+        if not self.uncovered or not reveal:
+            return '_'
+        if self.number == -1:
+            return '*'
         return str(self.number)
     
     def __repr__(self):
+        if not self.uncovered:
+            return '_'
         if self.number == -1:
             return '*'
         return str(self.number)
@@ -55,6 +61,6 @@ def makeBoard(rows, cols, mines, startr, startc):
 
 
 
-def printBoard(board):
+def print_board(board):
     for row in board:
         print(row)
