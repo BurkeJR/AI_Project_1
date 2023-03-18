@@ -33,34 +33,40 @@ class Square():
             return
         self.neighbor_mines.append((r, c))
 
+class Board():
+    def __init__(self, rows, cols, mines, startr, startc):
+        self.rows = rows
+        self.cols = cols
+        self.mines = mines
+        self.startr = startr
+        self.startc = startc
+        self.board = self.make_board()
+
+    def make_board(self):
+        board = [[Square(r, c, 0) for r in range(self.rows)] for c in range(self.cols)]
+
+        startingPointNeighbors = Main.findNeighbors(self.startr, self.startc, board)
+        startingPointNeighbors.append((self.startr,self.startc))
+
+        for _ in range(0, self.mines):
+            # find a space that isn't already a mine
+            m = (randint(0, self.rows-1), randint(0, self.cols-1))
+            while board[m[0]][m[1]].number == -1 or m in startingPointNeighbors:
+                m = (randint(0, self.rows-1), randint(0, self.cols-1))
+            
+            r = m[0]
+            c = m[1]
 
 
-def makeBoard(rows, cols, mines, startr, startc):
-    board = [[Square(r, c, 0) for r in range(rows)] for c in range(cols)]
+            board[r][c].number = -1
 
-    startingPointNeighbors = Main.findNeighbors(startr, startc, board)
-    startingPointNeighbors.append((startr,startc))
+            neighbors = Main.findNeighbors(r,c, board)
+            for row, col in neighbors:
+                board[row][col].number += 1 if board[row][col].number != -1 else 0
 
-    for _ in range(0, mines):
-        # find a space that isn't already a mine
-        m = (randint(0, rows-1), randint(0, cols-1))
-        while board[m[0]][m[1]].number == -1 or m in startingPointNeighbors:
-            m = (randint(0, rows-1), randint(0, cols-1))
-        
-        r = m[0]
-        c = m[1]
+        return board
 
-
-        board[r][c].number = -1
-
-        neighbors = Main.findNeighbors(r,c, board)
-        for row, col in neighbors:
-            board[row][col].number += 1 if board[row][col].number != -1 else 0
-
-    return board
-
-
-
-def print_board(board):
-    for row in board:
-        print(row)
+    def __str__(self) -> str:
+        s = ""
+        for row in self.board:
+            s += row + "\n"
