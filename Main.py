@@ -32,7 +32,7 @@ def main():
     print("Congrats!")
 
 def mark(row, col, board, gameBoard):
-    val = gameBoard[row][col]
+    val = gameBoard[row][col].number
     
     if board[row][col] != '_':
         return
