@@ -8,6 +8,7 @@ class Square():
         self.number = number
         self.uncovered = uncovered
         self.neighbor_mines = []
+        self.uncoveredNeighbors = 0
 
     def safe_to_uncover_neighbors(self):
         return self.number == len(self.neighbor_mines)
@@ -76,8 +77,13 @@ class Board():
     
         self.board[row][col].uncovered = True
 
+        neighbors = self.findNeighbors(row, col)
+
+        for nrow, ncol in neighbors:
+            self.board[nrow][ncol].uncoveredNeighbors += 1
+
+
         if val == 0:
-            neighbors = self.findNeighbors(row, col)
             self.uncover_neighbors(neighbors)
 
     def uncover_neighbors(self, neighbors):
