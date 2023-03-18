@@ -35,12 +35,7 @@ class AI():
                 if val.uncovered and val.number != 0 and val.safe_to_uncover_neighbors(numNeighbors):
                     vals.add((val.r, val.c))
 
-        flaggable = set()
-
-        neighbors = {neighbor for r,c in vals for neighbor in self.obj.findNeighbors(r,c) if not self.game_board[neighbor[0]][neighbor[1]].uncovered}
-
-        for nrow, ncol in neighbors:
-            flaggable.add((nrow, ncol))
+        flaggable = {neighbor for r,c in vals for neighbor in self.obj.findNeighbors(r,c) if not self.game_board[neighbor[0]][neighbor[1]].uncovered}
                     
 
         return flaggable
