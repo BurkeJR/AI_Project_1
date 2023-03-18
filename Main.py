@@ -17,7 +17,11 @@ def main():
             break
         row = int(input("Enter guessing row: "))
         col = int(input("Enter guessing column: "))
-        mark(row, col, userBoard, gameBoard)
+        if mark(row, col, userBoard, gameBoard):
+            print("Hit a mine")
+            userBoard[row][col] = '*'
+            print(userBoard)
+            return
         print(userBoard)
 
 
@@ -31,10 +35,8 @@ def mark(row, col, board, gameBoard):
         return
 
     if val == -1:
-        print("Game Over")
-        board[row][col] = '*'
-        print(board)
-        exit()
+        return True
+    
     board[row][col] = val
 
     if val == 0:
