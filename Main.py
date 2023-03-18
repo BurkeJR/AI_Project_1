@@ -7,13 +7,13 @@ def main():
     mines = int(input("Enter number of mines: "))
 
 
-    gameBoard = m.makeBoard(rows, cols, mines)
-    m.printBoard(gameBoard)
+    gameBoard = m.makeBoard(rows, cols, mines, 0, 0)
 
     userBoard = np.asarray([["_" for i in range(cols)] for j in range(rows)])
 
+    mark(0, 0, userBoard, gameBoard)
 
-
+    print(userBoard)
 
     while True:
         if sum((1 for row in userBoard for x in row if x == '_')) == mines:
@@ -21,9 +21,9 @@ def main():
         row = int(input("Enter guessing row: "))
         col = int(input("Enter guessing column: "))
         if mark(row, col, userBoard, gameBoard):
+            print(userBoard)
             print("Hit a mine")
             userBoard[row][col] = '*'
-            print(userBoard)
             return
         print(userBoard)
 
