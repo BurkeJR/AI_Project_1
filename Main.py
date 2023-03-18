@@ -1,4 +1,3 @@
-import MakeBoard as m
 from MakeBoard import Board
 import numpy as np
 
@@ -15,10 +14,10 @@ def main():
     gameBoard = board.board
     revealed_board = np.asarray([[(gameBoard[j][i].number if gameBoard[j][i].number != -1 else '*') for i in range(cols)] for j in range(rows)])
 
-    uncover(startr, startc, gameBoard)
+    board.uncover(startr, startc)
 
     print(revealed_board)
-    print(gameBoard)
+    print(board)
 
     while True:
         if sum((1 for row in gameBoard for x in row if not x.uncovered)) == mines:
@@ -26,81 +25,25 @@ def main():
 
         val = input("g for guess, f for flag: ")
 
-
         row = int(input("Enter row: "))
         col = int(input("Enter column: "))
 
-        neighbors = findNeighbors(row, col, gameBoard)
+        neighbors = board.findNeighbors(row, col)
 
         if val == "g":
-            if uncover(row, col, gameBoard):
+            if board.uncover(row, col):
                 print(board)
                 print("Hit a mine")
                 return
         else:
             gameBoard[row][col].uncovered == True
-            flagMine(row, col, gameBoard, neighbors)
-            evaluateNeighbors(row, col, gameBoard, neighbors)
+            board.flagMine(row, col, neighbors)
+            board.evaluateNeighbors(row, col, neighbors)
         
         print(board)
 
     print(board)
     print("Congrats!")
-
-def uncover(row, col, gameBoard):
-    val = gameBoard[row][col].number
-    
-    if gameBoard[row][col].uncovered:
-        return
-
-    if val == -1:
-        return True
-    
-    gameBoard[row][col].uncovered = True
-
-    if val == 0:
-        neighbors = findNeighbors(row, col, gameBoard)
-        uncover_neighbors(gameBoard, neighbors)
-
-def uncover_neighbors(gameBoard, neighbors):
-
-    for row, col in neighbors:
-        uncover(row, col, gameBoard)
-
-def findNeighbors(r, c, gameBoard):
-    rows = len(gameBoard)
-    cols = len(gameBoard[0])
-
-    neighbors = []
-    if r > 0:
-        neighbors.append((r - 1,c))
-        if c > 0:
-            neighbors.append((r - 1, c - 1))
-        if c < cols - 1:
-            neighbors.append((r - 1, c + 1))
-    if c > 0:
-        neighbors.append((r, c - 1))
-    if c < cols - 1:
-        neighbors.append((r, c + 1))
-    if r < rows - 1:
-        neighbors.append((r + 1, c))
-        if c > 0:
-            neighbors.append((r + 1, c - 1))
-        if c < cols - 1:
-            neighbors.append((r + 1, c + 1))
-    return neighbors
-
-def flagMine(r, c, gameBoard, neighbors):
-    for nrow,ncol in neighbors:
-        gameBoard[nrow][ncol].neighbor_mines.append(gameBoard[r][c])
-        
-def evaluateNeighbors(r,c, gameBoard, neighbors):
-    for nrow,ncol in neighbors:
-        square = gameBoard[nrow][ncol]
-        if square.uncovered and square.number == len(square.neighbor_mines):
-            neighborsEval = findNeighbors(nrow, ncol, gameBoard)
-            neighborsEval.remove((r,c))
-            uncover_neighbors(gameBoard, neighborsEval)
 
     
 

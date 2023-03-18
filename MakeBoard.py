@@ -1,6 +1,5 @@
 from numpy import zeros
 from random import randint
-import Main
 
 class Square():
     def __init__(self, r, c, number, uncovered=False):
@@ -45,7 +44,7 @@ class Board():
     def make_board(self):
         board = [[Square(r, c, 0) for r in range(self.rows)] for c in range(self.cols)]
 
-        startingPointNeighbors = Main.findNeighbors(self.startr, self.startc, board)
+        startingPointNeighbors = self.findNeighbors(self.startr, self.startc)
         startingPointNeighbors.append((self.startr,self.startc))
 
         for _ in range(0, self.mines):
@@ -60,13 +59,69 @@ class Board():
 
             board[r][c].number = -1
 
-            neighbors = Main.findNeighbors(r,c, board)
+            neighbors = self.findNeighbors(r,c)
             for row, col in neighbors:
                 board[row][col].number += 1 if board[row][col].number != -1 else 0
 
         return board
 
+    def uncover(self, row, col):
+        val = self.board[row][col].number
+    
+        if self.board[row][col].uncovered:
+            return
+
+        if val == -1:
+            return True
+    
+        self.board[row][col].uncovered = True
+
+        if val == 0:
+            neighbors = self.findNeighbors(row, col)
+            self.uncover_neighbors(neighbors)
+
+    def uncover_neighbors(self, neighbors):
+
+        for row, col in neighbors:
+            self.uncover(row, col)
+    
+    def findNeighbors(self, r, c):
+        neighbors = []
+        if r > 0:
+            neighbors.append((r - 1,c))
+            if c > 0:
+                neighbors.append((r - 1, c - 1))
+            if c < self.cols - 1:
+                neighbors.append((r - 1, c + 1))
+        if c > 0:
+            neighbors.append((r, c - 1))
+        if c < self.cols - 1:
+            neighbors.append((r, c + 1))
+        if r < self.rows - 1:
+            neighbors.append((r + 1, c))
+            if c > 0:
+                neighbors.append((r + 1, c - 1))
+            if c < self.cols - 1:
+                neighbors.append((r + 1, c + 1))
+        return neighbors
+    
+    def flagMine(self, r, c, neighbors):
+        for nrow,ncol in neighbors:
+            self.board[nrow][ncol].neighbor_mines.append(self.board[r][c])
+
+    def evaluateNeighbors(self, r, c, neighbors):
+        for nrow,ncol in neighbors:
+            square = self.board[nrow][ncol]
+            if square.uncovered and square.number == len(square.neighbor_mines):
+                neighborsEval = self.findNeighbors(nrow, ncol)
+                neighborsEval.remove((r,c))
+                self.uncover_neighbors(neighborsEval)
+
     def __str__(self) -> str:
         s = ""
         for row in self.board:
-            s += row + "\n"
+            s += str(row) + "\n"
+        return s
+    
+    def __repr__(self):
+        return str(self)
