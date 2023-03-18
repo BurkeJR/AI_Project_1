@@ -21,20 +21,26 @@ class AI():
         print(flaggable)
 
         for row, col in flaggable:
-            self.obj.flagMine(row, col, self.obj.findNeighbors(row, col))
+            neighbors = self.obj.findNeighbors(row, col)
+            self.obj.flagMine(row, col, neighbors)
+            self.obj.evaluateNeighbors(row, col, neighbors)
 
         print(self.obj)
 
     def getFlaggable(self):
-        vals = {(val.r, val.c) for row in self.game_board for val in row if val.uncovered and val.safe_to_uncover_neighbors(len(self.obj.findNeighbors(val.r, val.c)))}
-        
+        vals = set()
+        for row in self.game_board:
+            for val in row:
+                numNeighbors = len(self.obj.findNeighbors(val.r, val.c))
+                if val.uncovered and val.number != 0 and val.safe_to_uncover_neighbors(numNeighbors):
+                    vals.add((val.r, val.c))
+
         flaggable = set()
 
-        for row, col in vals:
-            neighbors = self.obj.findNeighbors(row, col)
-            for nrow, ncol in neighbors:
-                if not self.game_board[nrow][ncol].uncovered:
-                    flaggable.add((nrow, ncol))
+        neighbors = {neighbor for r,c in vals for neighbor in self.obj.findNeighbors(r,c) if not self.game_board[neighbor[0]][neighbor[1]].uncovered}
+
+        for nrow, ncol in neighbors:
+            flaggable.add((nrow, ncol))
                     
 
         return flaggable

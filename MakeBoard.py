@@ -48,7 +48,7 @@ class Board():
         return sum((1 for row in self.board for x in row if not x.uncovered)) == self.mines
 
     def make_board(self):
-        board = [[Square(r, c, 0) for r in range(self.rows)] for c in range(self.cols)]
+        board = [[Square(r, c, 0) for c in range(self.cols)] for r in range(self. rows)]
 
         startingPointNeighbors = self.findNeighbors(self.startr, self.startc)
         startingPointNeighbors.append((self.startr,self.startc))
