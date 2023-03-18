@@ -8,7 +8,7 @@ def main():
 
 
     gameBoard = m.makeBoard(rows, cols, mines)
-    print(gameBoard)
+    m.printBoard(gameBoard)
 
     userBoard = np.asarray([["_" for i in range(cols)] for j in range(rows)])
 

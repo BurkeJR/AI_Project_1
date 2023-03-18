@@ -14,12 +14,13 @@ class Square():
         return self.number == len(self.neighbor_mines)
     
     def __str__(self):
-        return "{}".format(self.number)
+        return str(self.number)
     
     def __repr__(self):
         if self.number == -1:
             return '*'
-        return "{}".format(self.number)
+        return str(self.number)
+    
     def add_neighbor_to_mine_list(self, r, c):
         if (r, c) in self.neighbor_mines:
             # this neighbor is already in the list
@@ -47,10 +48,8 @@ def makeBoard(rows, cols, mines):
 
     return board
 
-b = makeBoard(5, 5, 5)
 
-for r in range(len(b)):
-    s = ""
-    for c in range(len(b[r])):
-        s += f"{b[r][c].number} "
-    print(s)
+
+def printBoard(board):
+    for row in board:
+        print(row)
