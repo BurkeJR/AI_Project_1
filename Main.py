@@ -7,9 +7,8 @@ def main():
     mines = int(input("Enter number of mines: "))
 
 
-    middle = rows * cols // 2
-    startr = middle // rows
-    startc = middle % cols
+    startr = rows // 2
+    startc = cols // 2
 
     gameBoard = m.makeBoard(rows, cols, mines, startr, startc)
 
