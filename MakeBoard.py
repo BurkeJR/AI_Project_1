@@ -13,8 +13,8 @@ class Square():
     def safe_to_uncover_neighbors(self):
         return self.number == len(self.neighbor_mines)
     
-    def __str__(self, reveal=False):
-        if not self.uncovered or not reveal:
+    def __str__(self):
+        if not self.uncovered:
             return '_'
         if self.number == -1:
             return '*'
