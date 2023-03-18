@@ -42,6 +42,7 @@ class Board():
         self.mines = mines
         self.startr = startr
         self.startc = startc
+        self.uncoveredMines = 0
         self.board = self.make_board()
     
     def hasWon(self):
@@ -117,6 +118,9 @@ class Board():
         return neighbors
     
     def flagMine(self, r, c, neighbors):
+        self.board[r][c].uncovered = True
+        self.uncoveredMines += 1
+
         for nrow,ncol in neighbors:
             self.board[nrow][ncol].neighbor_mines.append(self.board[r][c])
 

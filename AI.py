@@ -16,16 +16,24 @@ class AI():
 
         print(self.obj)
 
-        flaggable = self.getFlaggable()
+        while not self.obj.hasWon():
+            flaggable = self.getFlaggable()
 
-        print(flaggable)
+            if not flaggable:
+                print(self.obj)
+                print("Need backtracking search")
+                return
 
-        for row, col in flaggable:
-            neighbors = self.obj.findNeighbors(row, col)
-            self.obj.flagMine(row, col, neighbors)
-            self.obj.evaluateNeighbors(row, col, neighbors)
 
-        print(self.obj)
+            for row, col in flaggable:
+                neighbors = self.obj.findNeighbors(row, col)
+                self.obj.flagMine(row, col, neighbors)
+                self.obj.evaluateNeighbors(row, col, neighbors)
+
+
+
+
+            print(self.obj)
 
     def getFlaggable(self):
         vals = set()
