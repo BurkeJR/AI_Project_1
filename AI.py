@@ -35,6 +35,8 @@ class AI():
 
             print(self.obj)
 
+        print("You won!")
+
     def getFlaggable(self):
         vals = set()
         for row in self.game_board:

@@ -46,7 +46,7 @@ class Board():
         self.board = self.make_board()
     
     def hasWon(self):
-        return sum((1 for row in self.board for x in row if not x.uncovered)) == self.mines
+        return self.uncoveredMines == self.mines
 
     def make_board(self):
         board = [[Square(r, c, 0) for c in range(self.cols)] for r in range(self. rows)]
