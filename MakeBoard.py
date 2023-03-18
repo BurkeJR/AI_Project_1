@@ -20,6 +20,11 @@ class Square():
         if self.number == -1:
             return '*'
         return "{}".format(self.number)
+    def add_neighbor_to_mine_list(self, r, c):
+        if (r, c) in self.neighbor_mines:
+            # this neighbor is already in the list
+            return
+        self.neighbor_mines.append((r, c))
 
 def makeBoard(rows, cols, mines):
     board = [[Square(r, c, 0) for r in range(rows)] for c in range(cols)]
