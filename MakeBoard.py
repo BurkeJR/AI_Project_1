@@ -27,13 +27,18 @@ class Square():
             return
         self.neighbor_mines.append((r, c))
 
-def makeBoard(rows, cols, mines):
+
+
+def makeBoard(rows, cols, mines, startr, startc):
     board = [[Square(r, c, 0) for r in range(rows)] for c in range(cols)]
+
+    startingPointNeighbors = Main.findNeighbors(startr, startc, rows, cols)
+    startingPointNeighbors.append((startr,startc))
 
     for _ in range(0, mines):
         # find a space that isn't already a mine
         m = (randint(0, rows-1), randint(0, cols-1))
-        while board[m[0]][m[1]].number == -1:
+        while board[m[0]][m[1]].number == -1 or m in startingPointNeighbors:
             m = (randint(0, rows-1), randint(0, cols-1))
         
         r = m[0]

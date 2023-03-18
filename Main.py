@@ -7,11 +7,15 @@ def main():
     mines = int(input("Enter number of mines: "))
 
 
-    gameBoard = m.makeBoard(rows, cols, mines, 0, 0)
+    middle = rows * cols // 2
+    startr = middle // rows
+    startc = middle % cols
+
+    gameBoard = m.makeBoard(rows, cols, mines, startr, startc)
 
     userBoard = np.asarray([["_" for i in range(cols)] for j in range(rows)])
 
-    mark(0, 0, userBoard, gameBoard)
+    mark(startr, startc, userBoard, gameBoard)
 
     print(userBoard)
 
@@ -21,9 +25,9 @@ def main():
         row = int(input("Enter guessing row: "))
         col = int(input("Enter guessing column: "))
         if mark(row, col, userBoard, gameBoard):
+            userBoard[row][col] = '*'
             print(userBoard)
             print("Hit a mine")
-            userBoard[row][col] = '*'
             return
         print(userBoard)
 
