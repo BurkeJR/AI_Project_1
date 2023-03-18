@@ -34,7 +34,7 @@ def main():
             if uncover(row, col, gameBoard):
                 m.print_board(gameBoard)
                 print("Hit a mine")
-            return
+                return
         else:
             gameBoard[row][col].uncovered == True
             flagMine(row, col, gameBoard, neighbors)
