@@ -12,6 +12,9 @@ def main():
 
     userBoard = np.asarray([["_" for i in range(cols)] for j in range(rows)])
 
+
+
+
     while True:
         if sum((1 for row in userBoard for x in row if x == '_')) == mines:
             break
@@ -46,23 +49,30 @@ def markNeighbors(r, c, board, gameBoard):
     rows = len(board)
     cols = len(board[0])
 
-    if r > 0:
-        mark(r-1, c, board, gameBoard)
-        if c > 0:
-            mark(r-1, c-1, board, gameBoard)
-        if c < cols - 1:
-            mark(r - 1, c + 1, board, gameBoard)
-    if c > 0:
-        mark(r, c - 1, board, gameBoard)
-    if c < cols - 1:
-        mark(r, c + 1, board, gameBoard)
-    if r < rows - 1:
-        mark(r + 1, c, board, gameBoard)
-        if c > 0:
-            mark(r + 1, c - 1, board, gameBoard)
-        if c < cols - 1:
-            mark(r + 1, c + 1, board, gameBoard)
+    neigbhors = findNeighbors(r, c, rows, cols)
 
+    for row, col in neigbhors:
+        mark(row, col, board, gameBoard)
+
+def findNeighbors(r, c, rows, cols):
+    neighbors = []
+    if r > 0:
+        neighbors.append((r - 1,c))
+        if c > 0:
+            neighbors.append((r - 1, c - 1))
+        if c < cols - 1:
+            neighbors.append((r - 1, c + 1))
+    if c > 0:
+        neighbors.append((r, c - 1))
+    if c < cols - 1:
+        neighbors.append((r, c + 1))
+    if r < rows - 1:
+        neighbors.append((r + 1, c))
+        if c > 0:
+            neighbors.append((r + 1, c - 1))
+        if c < cols - 1:
+            neighbors.append((r + 1, c + 1))
+    return neighbors
     
 
 

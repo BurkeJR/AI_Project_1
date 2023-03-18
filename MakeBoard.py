@@ -1,5 +1,6 @@
 from numpy import zeros
 from random import randint
+import Main
 
 class Square():
     def __init__(self, r, c, number, uncovered=False):
@@ -24,6 +25,7 @@ def makeBoard(rows, cols, mines):
         r = m[0]
         c = m[1]
 
+        
         # add the mine and increment its neighbors
         board[r][c].number = -1
         if r > 0:
