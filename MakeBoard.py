@@ -10,8 +10,10 @@ class Square():
         self.neighbor_mines = []
         self.uncoveredNeighbors = 0
 
-    def safe_to_uncover_neighbors(self):
-        return self.number == len(self.neighbor_mines)
+    def safe_to_uncover_neighbors(self, numNeighbors):
+        var = numNeighbors - self.uncoveredNeighbors == self.number
+        return var
+    
     
     def __str__(self):
         if not self.uncovered:
@@ -41,6 +43,9 @@ class Board():
         self.startr = startr
         self.startc = startc
         self.board = self.make_board()
+    
+    def hasWon(self):
+        return sum((1 for row in self.board for x in row if not x.uncovered)) == self.mines
 
     def make_board(self):
         board = [[Square(r, c, 0) for r in range(self.rows)] for c in range(self.cols)]
