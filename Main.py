@@ -1,4 +1,5 @@
 import MakeBoard as m
+from MakeBoard import Board
 import numpy as np
 
 def main():
@@ -10,13 +11,14 @@ def main():
     startr = rows // 2
     startc = cols // 2
 
-    gameBoard = m.makeBoard(rows, cols, mines, startr, startc)
+    board = Board(rows, cols, mines, startr, startc)
+    gameBoard = board.board
     revealed_board = np.asarray([[(gameBoard[j][i].number if gameBoard[j][i].number != -1 else '*') for i in range(cols)] for j in range(rows)])
 
     uncover(startr, startc, gameBoard)
 
     print(revealed_board)
-    m.print_board(gameBoard)
+    print(gameBoard)
 
     while True:
         if sum((1 for row in gameBoard for x in row if not x.uncovered)) == mines:
@@ -32,7 +34,7 @@ def main():
 
         if val == "g":
             if uncover(row, col, gameBoard):
-                m.print_board(gameBoard)
+                print(board)
                 print("Hit a mine")
             return
         else:
@@ -40,9 +42,9 @@ def main():
             flagMine(row, col, gameBoard, neighbors)
             evaluateNeighbors(row, col, gameBoard, neighbors)
         
-        m.print_board(gameBoard)
+        print(board)
 
-    m.print_board(gameBoard)
+    print(board)
     print("Congrats!")
 
 def uncover(row, col, gameBoard):
