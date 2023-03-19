@@ -69,10 +69,9 @@ class AI():
                     return
 
 if __name__ == "__main__":
-    for _ in range(100):
-        rows = 8
-        cols = 8
-        mines = 12
-        board = Board(rows, cols, mines, rows // 2, cols // 2)
-        ai = AI(board)
-        ai.run()
+    rows = 8
+    cols = 8
+    mines = 12
+    board = Board(rows, cols, mines, rows // 2, cols // 2)
+    ai = AI(board)
+    ai.run()
