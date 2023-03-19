@@ -39,13 +39,13 @@ class Board():
         self.startc: int = startc
         
         # verify that the input is valid
-        if any(rows < 1, cols < 1, mines < 0):
+        if any([rows < 1, cols < 1, mines < 0]):
             raise ValueError("Board sizes must be > 1. Mines must be > 0.")
 
         if (0 > startr > rows) or (0 > startc > cols):
             raise ValueError(f"Invalid starting space. Must be within the bounds of the game: {rows}x{cols}")
 
-        starting_space_size = self.find_neighbors(startr, startc) + 1
+        starting_space_size = len(self.find_neighbors(startr, startc)) + 1
         if (rows * cols) - starting_space_size < mines:
             raise ValueError("Invalid Board size. The board size must be large enough to place all mines, " +
                              f"including spaces designated for starting. You're board size was {rows*cols}, " + 
