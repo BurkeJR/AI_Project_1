@@ -39,7 +39,6 @@ class Board():
         self.board = self.make_board()
 
     def hasWon(self):
-        print(f"uncovered: {len(self.uncovered_mines)}, total: {self.mines}")
         return len(self.uncovered_mines) == self.mines
 
     def make_board(self):
