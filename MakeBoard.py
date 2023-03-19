@@ -35,11 +35,11 @@ class Board():
         self.mines = mines
         self.startr = startr
         self.startc = startc
-        self.uncovered_mines = []
+        self.uncovered_mines = set()
         self.board = self.make_board()
 
     def hasWon(self):
-        return len(self.uncovered_mines) == self.mines
+        return sum((1 for row in self.board for square in row if square.uncovered)) == (self.rows * self.cols) - self.mines
 
     def make_board(self):
         board = [[Square(r, c, 0) for c in range(self.cols)] for r in range(self. rows)]
@@ -87,6 +87,7 @@ class Board():
         self.board[row][col].uncovered = False
 
     def uncover_neighbors(self, neighbors):
+        didUncover = None
         for row, col in neighbors:
             self.uncover(row, col)
     
@@ -111,8 +112,7 @@ class Board():
         return neighbors
 
     def flagMine(self, r, c, neighbors):
-        if (r, c) not in self.uncovered_mines:
-            self.uncovered_mines.append((r, c))
+        self.uncovered_mines.add((r, c))
 
         for nrow, ncol in neighbors:
             self.board[nrow][ncol].neighbor_mines.append(self.board[r][c])

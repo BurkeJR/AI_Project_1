@@ -25,11 +25,10 @@ class AI():
                 neighbors = self.obj.findNeighbors(row, col)
                 self.obj.flagMine(row, col, neighbors)
                 self.obj.evaluateNeighbors(row, col, neighbors)
-
+                    
             print(self.obj)
 
         print("You won!")
-        print(sum((1 for row in self.game_board for square in row if square.uncovered)))
 
     def getFlaggable(self):
         vals = set()
@@ -70,9 +69,10 @@ class AI():
                     return
 
 if __name__ == "__main__":
-    rows = 10
-    cols = 10
-    mines = 10
-    board = Board(rows, cols, mines, rows // 2, cols // 2)
-    ai = AI(board)
-    ai.run()
+    for _ in range(100):
+        rows = 8
+        cols = 8
+        mines = 12
+        board = Board(rows, cols, mines, rows // 2, cols // 2)
+        ai = AI(board)
+        ai.run()
