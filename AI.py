@@ -29,6 +29,7 @@ class AI():
             print(self.obj)
 
         print("You won!")
+        print(sum((1 for row in self.game_board for square in row if square.uncovered)))
 
     def getFlaggable(self):
         vals = set()
@@ -39,6 +40,16 @@ class AI():
                     vals.add((val.r, val.c))
 
         flaggable = {neighbor for r,c in vals for neighbor in self.obj.findNeighbors(r,c) if not self.game_board[neighbor[0]][neighbor[1]].uncovered}
+
+        vals = set()
+        for val in flaggable:
+            if val in self.obj.uncovered_mines:
+                vals.add(val)
+
+        for val in vals:
+            flaggable.remove(val)
+        
+
 
         return flaggable
 
