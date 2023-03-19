@@ -40,10 +40,10 @@ class Board():
         
         # verify that the input is valid
         if any([rows < 1, cols < 1, mines < 0]):
-            raise ValueError("Board sizes must be > 1. Mines must be > 0.")
+            raise ValueError("Board sizes must be > 1. Mines must be > 0.\n")
 
         if (0 > startr > rows) or (0 > startc > cols):
-            raise ValueError(f"Invalid starting space. Must be within the bounds of the game: {rows}x{cols}")
+            raise ValueError(f"Invalid starting space. Must be within the bounds of the game: {rows}x{cols}\n")
 
         starting_space_size = len(self.find_neighbors(startr, startc)) + 1
         if (rows * cols) - starting_space_size < mines:
@@ -51,7 +51,7 @@ class Board():
                              f"including spaces designated for starting. You're board size was {rows*cols}, " + 
                              f"with {starting_space_size} spaces being reserved for a starting space. " +
                              f"You had only {(rows * cols) - starting_space_size < mines} valid spaces for mines " + 
-                             f"with {mines} mines.")
+                             f"with {mines} mines.\n")
 
         self.found_mines = set()
         self.board = self.make_board()

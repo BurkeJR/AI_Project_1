@@ -13,19 +13,13 @@ def main():
         print("\nPlease enter integers for rows, columns, and mines.\n")
         main()
 
-    #Grid must be larger than 3x3
-    if rows < 4 or cols < 4:
-        print("Please ensure both number of rows and number of columns is greater than 3.\n")
+    try:
+        board = Board(rows, cols, mines, rows // 2, cols // 2)
+        ai = AI(board)
+        ai.run()
+    except ValueError as e:
+        print(e)
         main()
-    
-    #Mines must be less than number of squares
-    if mines > (rows * cols) - 9:
-        print("Too many mines, please ensure mines is less than size of grid\n")
-        main()
-
-    board = Board(rows, cols, mines, rows // 2, cols // 2)
-    ai = AI(board)
-    ai.run()
 
 
 
