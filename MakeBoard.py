@@ -10,8 +10,7 @@ class Square():
         self.uncoveredNeighbors = 0
 
     def safe_to_uncover_neighbors(self, numNeighbors):
-        var = numNeighbors - self.uncoveredNeighbors == self.number
-        return var
+        return numNeighbors - self.uncoveredNeighbors == self.number
 
     def __str__(self):
         if not self.uncovered:
@@ -36,11 +35,12 @@ class Board():
         self.mines = mines
         self.startr = startr
         self.startc = startc
-        self.uncoveredMines = 0
+        self.uncovered_mines = []
         self.board = self.make_board()
 
     def hasWon(self):
-        return self.uncoveredMines == self.mines
+        print(f"uncovered: {len(self.uncovered_mines)}, total: {self.mines}")
+        return len(self.uncovered_mines) == self.mines
 
     def make_board(self):
         board = [[Square(r, c, 0) for c in range(self.cols)] for r in range(self. rows)]
@@ -88,7 +88,6 @@ class Board():
         self.board[row][col].uncovered = False
 
     def uncover_neighbors(self, neighbors):
-
         for row, col in neighbors:
             self.uncover(row, col)
     
@@ -113,10 +112,10 @@ class Board():
         return neighbors
 
     def flagMine(self, r, c, neighbors):
-        self.board[r][c].uncovered = True
-        self.uncoveredMines += 1
+        if (r, c) not in self.uncovered_mines:
+            self.uncovered_mines.append((r, c))
 
-        for nrow,ncol in neighbors:
+        for nrow, ncol in neighbors:
             self.board[nrow][ncol].neighbor_mines.append(self.board[r][c])
 
     def evaluateNeighbors(self, r, c, neighbors):
