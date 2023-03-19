@@ -2,6 +2,6 @@
 
 ## Running
 
-At the bottom of AI.py, the size of the board and the number of mines can be set. 
+Run Game.py script to startup, will be prompted for rows, columns, mines
 
-The AI can then be run by running AI.py as a script.
+Game.py will then print output to command line

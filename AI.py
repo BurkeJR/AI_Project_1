@@ -26,6 +26,7 @@ class AI():
 
             # resolve neighbors of the mine 
             for row, col in flaggable:
+                print(f"Flagged {row}, {col}")
                 neighbors = self.obj.find_neighbors(row, col)
                 self.obj.flag_mine(row, col, neighbors)
                 self.obj.evaluate_neighbors(row, col, neighbors)

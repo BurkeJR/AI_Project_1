@@ -1,4 +1,4 @@
-import AI
+from AI import AI
 from MakeBoard import Board
 
 #Run Game from here
