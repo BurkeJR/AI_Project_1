@@ -6,11 +6,19 @@ class Square():
         self.c = c
         self.number = number
         self.uncovered = uncovered
-        self.neighbor_mines = []
-        self.uncoveredNeighbors = 0
+        self.neighbor_mines = []  # list of neighbors that are mines
+        self.uncovered_neighbors = 0
 
-    def safe_to_uncover_neighbors(self, numNeighbors):
-        return numNeighbors - self.uncoveredNeighbors == self.number
+    def can_flag(self, numNeighbors):
+        """Return true if the uncovered neighbors of this square are all mines. False, otherwise."""
+        return numNeighbors - self.uncovered_neighbors == self.number
+
+    def add_neighbor_to_mine_list(self, r, c):
+        """Adds a neighbor square to the list of adjacent mines."""
+        if (r, c) in self.neighbor_mines:
+            # this neighbor is already in the list
+            return
+        self.neighbor_mines.append((r, c))
 
     def __str__(self):
         if not self.uncovered:
@@ -22,12 +30,6 @@ class Square():
     def __repr__(self):
         return str(self)
 
-    def add_neighbor_to_mine_list(self, r, c):
-        if (r, c) in self.neighbor_mines:
-            # this neighbor is already in the list
-            return
-        self.neighbor_mines.append((r, c))
-
 class Board():
     def __init__(self, rows, cols, mines, startr, startc):
         self.rows = rows
@@ -35,97 +37,125 @@ class Board():
         self.mines = mines
         self.startr = startr
         self.startc = startc
-        self.uncovered_mines = set()
+        self.found_mines = set()
         self.board = self.make_board()
 
-    def hasWon(self):
+    def has_won(self):
+        """Returns true if all of the mines have been found. False, otherwise."""
         return sum((1 for row in self.board for square in row if square.uncovered)) == (self.rows * self.cols) - self.mines
 
     def make_board(self):
+        """
+        Creates the game board and places mines in random squares.
+        The starting square and its neighbors are exempt from being mines.
+        """
         board = [[Square(r, c, 0) for c in range(self.cols)] for r in range(self. rows)]
 
-        startingPointNeighbors = self.findNeighbors(self.startr, self.startc)
-        startingPointNeighbors.append((self.startr,self.startc))
+        starting_point_neighbors = self.find_neighbors(self.startr, self.startc)
+        starting_point_neighbors.append((self.startr,self.startc))
 
         for _ in range(0, self.mines):
-            # find a space that isn't already a mine
+            # find a space that isn't already a mine and isn't in the starting space
             m = (randint(0, self.rows-1), randint(0, self.cols-1))
-            while board[m[0]][m[1]].number == -1 or m in startingPointNeighbors:
+            while board[m[0]][m[1]].number == -1 or m in starting_point_neighbors:
                 m = (randint(0, self.rows-1), randint(0, self.cols-1))
 
             r = m[0]
             c = m[1]
 
+            # assign the square to be a mine
             board[r][c].number = -1
 
-            neighbors = self.findNeighbors(r,c)
+            # increment the number of the mine's neighbors (if they aren't a mine)
+            neighbors = self.find_neighbors(r,c)
             for row, col in neighbors:
                 board[row][col].number += 1 if board[row][col].number != -1 else 0
 
         return board
 
     def uncover(self, row, col):
+        """
+        Uncover a square. If the square has already been uncovered, returns None.
+        If the square is a mine, returns True. If the square is not a mine, returns False. 
+        If the number of the square is 0, uncovers its neighbors. 
+        """
         val = self.board[row][col].number
     
+        # square is already uncovered
         if self.board[row][col].uncovered:
             return
 
+        # square is a mine
         if val == -1:
             return True
 
         self.board[row][col].uncovered = True
 
-        neighbors = self.findNeighbors(row, col)
+        neighbors = self.find_neighbors(row, col)
 
+        # tell the square's neighbors that it has been uncovered 
         for nrow, ncol in neighbors:
-            self.board[nrow][ncol].uncoveredNeighbors += 1
+            self.board[nrow][ncol].uncovered_neighbors += 1
 
+        # since the number is 0, it is safe to uncover all neighbors 
         if val == 0:
             self.uncover_neighbors(neighbors)
 
     def cover(self, row, col):
+        """Set a square to be covered."""
         self.board[row][col].uncovered = False
 
     def uncover_neighbors(self, neighbors):
-        didUncover = None
+        """Uncovers the squares in the given list of neighbors."""
         for row, col in neighbors:
             self.uncover(row, col)
     
-    def findNeighbors(self, r, c):
+    def find_neighbors(self, r, c):
+        """Returns a list of all of the valid neighbors of a square."""
         neighbors = []
+        # above
         if r > 0:
-            neighbors.append((r - 1,c))
+            neighbors.append((r - 1, c))
             if c > 0:
                 neighbors.append((r - 1, c - 1))
             if c < self.cols - 1:
                 neighbors.append((r - 1, c + 1))
+        # left and right
         if c > 0:
             neighbors.append((r, c - 1))
         if c < self.cols - 1:
             neighbors.append((r, c + 1))
+        # below
         if r < self.rows - 1:
             neighbors.append((r + 1, c))
             if c > 0:
                 neighbors.append((r + 1, c - 1))
             if c < self.cols - 1:
                 neighbors.append((r + 1, c + 1))
+        
         return neighbors
 
-    def flagMine(self, r, c, neighbors):
-        self.uncovered_mines.add((r, c))
+    def flag_mine(self, r, c, neighbors):
+        """Add a square to the found mines list. Tell the square's neighbors that it is a mine."""
+        self.found_mines.add((r, c))
 
         for nrow, ncol in neighbors:
             self.board[nrow][ncol].neighbor_mines.append(self.board[r][c])
 
-    def evaluateNeighbors(self, r, c, neighbors):
-        for nrow,ncol in neighbors:
+    def evaluate_neighbors(self, r, c, neighbors):
+        """
+        Checks if the squares in the given list of neighbors have all of their adjacent mines flagged.
+        Then uncovers its neighbors.
+        """
+        for nrow, ncol in neighbors:
             square = self.board[nrow][ncol]
             if square.uncovered and square.number == len(square.neighbor_mines):
-                neighborsEval = self.findNeighbors(nrow, ncol)
-                neighborsEval.remove((r,c))
-                self.uncover_neighbors(neighborsEval)
+                neighbors_eval = self.find_neighbors(nrow, ncol)
+                neighbors_eval.remove((r,c))
+                self.uncover_neighbors(neighbors_eval)
 
     def __str__(self) -> str:
+        """Returns a string representation of the board."""
         s = ""
         for row in self.board:
             s += str(row) + "\n"

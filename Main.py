@@ -10,8 +10,8 @@ def main():
     startc = cols // 2
 
     board = Board(rows, cols, mines, startr, startc)
-    gameBoard = board.board
-    revealed_board = np.asarray([[(gameBoard[j][i].number if gameBoard[j][i].number != -1 else '*') for i in range(cols)] for j in range(rows)])
+    game_board = board.board
+    revealed_board = np.asarray([[(game_board[j][i].number if game_board[j][i].number != -1 else '*') for i in range(cols)] for j in range(rows)])
 
     board.uncover(startr, startc)
 
@@ -19,7 +19,7 @@ def main():
     print(board)
 
     while True:
-        if sum((1 for row in gameBoard for x in row if not x.uncovered)) == mines:
+        if sum((1 for row in game_board for x in row if not x.uncovered)) == mines:
             break
 
         val = input("g for guess, f for flag: ")
@@ -27,7 +27,7 @@ def main():
         row = int(input("Enter row: "))
         col = int(input("Enter column: "))
 
-        neighbors = board.findNeighbors(row, col)
+        neighbors = board.find_neighbors(row, col)
 
         if val == "g":
             if board.uncover(row, col):
@@ -35,9 +35,9 @@ def main():
                 print("Hit a mine")
                 return
         else:
-            gameBoard[row][col].uncovered == True
-            board.flagMine(row, col, neighbors)
-            board.evaluateNeighbors(row, col, neighbors)
+            game_board[row][col].uncovered == True
+            board.flag_mine(row, col, neighbors)
+            board.evaluate_neighbors(row, col, neighbors)
 
         print(board)
 
