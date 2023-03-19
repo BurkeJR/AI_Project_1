@@ -1,4 +1,3 @@
-from numpy import zeros
 from random import randint
 
 class Square():
@@ -13,22 +12,17 @@ class Square():
     def safe_to_uncover_neighbors(self, numNeighbors):
         var = numNeighbors - self.uncoveredNeighbors == self.number
         return var
-    
-    
+
     def __str__(self):
         if not self.uncovered:
             return '_'
         if self.number == -1:
             return '*'
         return str(self.number)
-    
+
     def __repr__(self):
-        if not self.uncovered:
-            return '_'
-        if self.number == -1:
-            return '*'
-        return str(self.number)
-    
+        return str(self)
+
     def add_neighbor_to_mine_list(self, r, c):
         if (r, c) in self.neighbor_mines:
             # this neighbor is already in the list
@@ -44,7 +38,7 @@ class Board():
         self.startc = startc
         self.uncoveredMines = 0
         self.board = self.make_board()
-    
+
     def hasWon(self):
         return self.uncoveredMines == self.mines
 
@@ -59,10 +53,9 @@ class Board():
             m = (randint(0, self.rows-1), randint(0, self.cols-1))
             while board[m[0]][m[1]].number == -1 or m in startingPointNeighbors:
                 m = (randint(0, self.rows-1), randint(0, self.cols-1))
-            
+
             r = m[0]
             c = m[1]
-
 
             board[r][c].number = -1
 
@@ -80,7 +73,7 @@ class Board():
 
         if val == -1:
             return True
-    
+
         self.board[row][col].uncovered = True
 
         neighbors = self.findNeighbors(row, col)
@@ -88,9 +81,11 @@ class Board():
         for nrow, ncol in neighbors:
             self.board[nrow][ncol].uncoveredNeighbors += 1
 
-
         if val == 0:
             self.uncover_neighbors(neighbors)
+
+    def cover(self, row, col):
+        self.board[row][col].uncovered = False
 
     def uncover_neighbors(self, neighbors):
 
@@ -116,7 +111,7 @@ class Board():
             if c < self.cols - 1:
                 neighbors.append((r + 1, c + 1))
         return neighbors
-    
+
     def flagMine(self, r, c, neighbors):
         self.board[r][c].uncovered = True
         self.uncoveredMines += 1
@@ -137,6 +132,6 @@ class Board():
         for row in self.board:
             s += str(row) + "\n"
         return s
-    
+
     def __repr__(self):
         return str(self)

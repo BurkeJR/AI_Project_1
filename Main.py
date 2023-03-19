@@ -6,7 +6,6 @@ def main():
     cols = int(input("Enter number of columns: "))
     mines = int(input("Enter number of mines: "))
 
-
     startr = rows // 2
     startc = cols // 2
 
@@ -39,17 +38,11 @@ def main():
             gameBoard[row][col].uncovered == True
             board.flagMine(row, col, neighbors)
             board.evaluateNeighbors(row, col, neighbors)
-        
+
         print(board)
 
     print(board)
     print("Congrats!")
-
-    
-    
-
-
-
 
 if __name__ == "__main__":
     main()

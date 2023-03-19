@@ -1,7 +1,5 @@
 from MakeBoard import Board
 
-
-
 class AI():
     def __init__(self, board) -> None:
         self.obj: Board = board
@@ -20,18 +18,13 @@ class AI():
             flaggable = self.getFlaggable()
 
             if not flaggable:
-                print(self.obj)
-                print("Need backtracking search")
-                return
-
+                self.backtrack()
+                continue
 
             for row, col in flaggable:
                 neighbors = self.obj.findNeighbors(row, col)
                 self.obj.flagMine(row, col, neighbors)
                 self.obj.evaluateNeighbors(row, col, neighbors)
-
-
-
 
             print(self.obj)
 
@@ -46,20 +39,29 @@ class AI():
                     vals.add((val.r, val.c))
 
         flaggable = {neighbor for r,c in vals for neighbor in self.obj.findNeighbors(r,c) if not self.game_board[neighbor[0]][neighbor[1]].uncovered}
-                    
 
         return flaggable
 
-    
-    
-
-
-
+    def backtrack(self):
+        # guess each uncovered square until we don't find a mine
+        for row in self.game_board:
+            for val in row:
+                if val.uncovered:
+                    # if this square is already uncovered, continue
+                    continue
+                if self.obj.uncover(val.r, val.c):
+                    # guess was a mine. re-cover the square and try another one
+                    self.obj.cover(val.r, val.c)
+                else:
+                    # didn't uncover a mine, go back to csp solving
+                    print(f"Guessed ({val.r},{val.c})")
+                    print(self.obj)
+                    return
 
 if __name__ == "__main__":
-    rows = 5
-    cols = 5
-    mines = 5
+    rows = 10
+    cols = 10
+    mines = 10
     board = Board(rows, cols, mines, rows // 2, cols // 2)
     ai = AI(board)
     ai.run()
