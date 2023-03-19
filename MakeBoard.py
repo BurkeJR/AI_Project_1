@@ -32,11 +32,27 @@ class Square():
 
 class Board():
     def __init__(self, rows, cols, mines, startr, startc):
-        self.rows = rows
-        self.cols = cols
-        self.mines = mines
-        self.startr = startr
-        self.startc = startc
+        self.rows: int = rows
+        self.cols: int = cols
+        self.mines: int = mines
+        self.startr: int = startr
+        self.startc: int = startc
+        
+        # verify that the input is valid
+        if any(rows < 1, cols < 1, mines < 0):
+            raise ValueError("Board sizes must be > 1. Mines must be > 0.")
+
+        if (0 > startr > rows) or (0 > startc > cols):
+            raise ValueError(f"Invalid starting space. Must be within the bounds of the game: {rows}x{cols}")
+
+        starting_space_size = self.find_neighbors(startr, startc) + 1
+        if (rows * cols) - starting_space_size < mines:
+            raise ValueError("Invalid Board size. The board size must be large enough to place all mines, " +
+                             f"including spaces designated for starting. You're board size was {rows*cols}, " + 
+                             f"with {starting_space_size} spaces being reserved for a starting space. " +
+                             f"You had only {(rows * cols) - starting_space_size < mines} valid spaces for mines " + 
+                             f"with {mines} mines.")
+
         self.found_mines = set()
         self.board = self.make_board()
 
