@@ -74,11 +74,3 @@ class AI():
                     print(f"Guessed ({val.r},{val.c})")
                     print(self.obj)
                     return
-
-if __name__ == "__main__":
-    rows = 8
-    cols = 8
-    mines = 12
-    board = Board(rows, cols, mines, rows // 2, cols // 2)
-    ai = AI(board)
-    ai.run()
